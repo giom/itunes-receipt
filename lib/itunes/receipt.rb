@@ -74,7 +74,11 @@ module Itunes
       end
       @download_id = receipt_attributes[:download_id]
       @expires_date = if receipt_attributes[:expires_date]
-        Time.parse receipt_attributes[:expires_date].sub('Etc/GMT', 'GMT')
+        if receipt_attributes[:expires_date] =~ /^\d+$/
+          Time.at(receipt_attributes[:expires_date].to_i / 1000)
+        else
+          Time.parse receipt_attributes[:expires_date].sub('Etc/GMT', 'GMT')
+        end
       end
       @expires_date_ms = if receipt_attributes[:expires_date_ms]
         receipt_attributes[:expires_date_ms].to_i
